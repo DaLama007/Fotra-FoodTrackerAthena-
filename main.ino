@@ -1,11 +1,10 @@
 #include <LiquidCrystal.h>
 
-const int FoodButton = 7
-const int WaterButton = 8
+const int FoodButton = 7;
+const int WaterButton = 8;
 
 // init useful time vars
 const int tOfHalfDay = 12*3600*1000; // in ms
-const int feedtingTimePM =  
 
 enum State{
   AM,
@@ -19,15 +18,16 @@ void setup(){
   pinMode(WaterButton, INPUT);
 
   // initialize display
+  lcd = 
   lcd.begin(20, 4);
 }
 
-State st = 0;
+State state = AM;
 bool gavefood = false;
 bool changedWater = false;
 
 void loop(){
-  int part = millis()/tOfHalfDay%2;
+  long long part = millis()/tOfHalfDay%2;
   FoodButtonState = digitalRead(FoodButton);
   WaterButtonState = digitalRead(WaterButton);
   switch(state){
@@ -42,6 +42,7 @@ void loop(){
         if(FoodButtonState == HIGH) gavefood = true;
         if(WaterButtonState == HIGH) changedWater = true;
       }
+      break;
     case PM:
       if(part==0){
         state = AM;
@@ -53,11 +54,15 @@ void loop(){
         if(FoodButtonState == HIGH) gavefood = true;
         if(WaterButtonState == HIGH) changedWater = true;
       }
+      break;
   }
   
 
   //update the display with new values
-
-  lcd.print("Athena has eaten: " + gavefood ? "Yes" : "No");
-  lcd.print("Athena has new water: " + changedWater ? "Yes" : "No");
+  lcd.setCursor(0, 0);
+  string test1 = "Athena has eaten: " + (gavefood ? "Yes" : "No");
+  lcd.print(test1);
+  lcd.setCursor(0, 2);
+  string test2 = "Athena has new water: " + (changedWater ? "Yes" : "No");
+  lcd.print(test2);
 }
